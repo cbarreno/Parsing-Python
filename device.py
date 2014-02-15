@@ -1,17 +1,7 @@
 import sys
 import fileinput
 
-sys.setrecursionlimit(2146000000)
-
-PyObject *res;
-buf = PyMem_New(char, BUFSIZ); 
-
-if (buf == None):
-    return PyErr_NoMemory();
-
-res = PyString_FromString(buf);
-PyMem_Del(buf); 
-return res;
+sys.setrecursionlimit(2146900000)
 
 def imprimirXml (a):
     l=len(a)
@@ -76,10 +66,21 @@ def obtenerCapability (l, nom1, nom2, i):
     else:
         obtenerCapability(l[1:], nom1, nom2, i)
         
+def extraerId(linea):
+    ini=buscarHasta (linea, '\"', 0, 0);
+    fin = buscarHasta (linea, '\"', ini+1, 0);
+    return extraerInfo(linea, ini+1, fin, 0, "")
         
-     
-       
-
+def extraerInfo (l,ini,fin,i,info):
+    if (l==[] or l==""):
+        return info
+    if (i < ini): 
+        return extraerInfo (l[1:],ini,fin,i+1,info)
+    else:
+        if (i==fin):
+            return info
+        else:
+            return extraerInfo (l[1:],ini,fin,i+1,info+l[0])
 
 
 def extraerNombre (l,ini,i,nombre):
@@ -191,27 +192,27 @@ def buscarGrupo (l, buscar,name):
 ##--Observación: La función recorrerCapacidadDevice encuentra un Tag Device en una línea específica, luego le envia a buscarCapacidad la cola(las demas líneas del xml a partir de ese tag device)
 ##--Y si encuentra otro tag device retorna 0; quiere decir que buscarCapacidad solo va buscar solo las capacidades de ese tag device
 def buscarCapacidad (l, buscar,name,value):
-    if (l==[] or l==""):
-        return 0
-    
-    pos = buscarHasta (l[0], '<', 0, 0);
-    c = obtenerChar (l[0], pos+1, 0);
-    nom = extraerNombre (l[0],pos+1,0,"");
-    det = extraerDetalleCapab (l[0],pos + 12,0,"")
-    if (c != '/'):
-        if (nom == buscar):
-            if (det == "name=\""+name+"\" value=\""+value+"\""):
-                return 1
+    for (i, item) in enumerate(l):
+        pos = buscarHasta (item, '<', 0, 0);
+        c = obtenerChar (item, pos+1, 0);
+        if (c != '/'):
+            nom = extraerNombre (item,pos+1,0,"");
+            if (nom == buscar):
+                det = extraerDetalleCapab (item,pos + 12,0,"")
+                ini=buscarHasta (det, '\"', 0, 0);
+                fin = buscarHasta (det, '\"', ini+1, 0);
+                nCap= extraerInfo(det, ini+1, fin, 0, "")
+                ini=buscarHasta (det, '\"', fin+1, 0);
+                fin = buscarHasta (det, '\"', ini+1, 0);
+                vCap= extraerInfo(det, ini+1, fin, 0, "")
+                if ((name in nCap) and (value in vCap)):
+                    return 1
             else:
-                return buscarCapacidad (l[1:], buscar,name,value) ##--busca demas lineas
-        else:
-            if (nom == "device"):
-                return 0  ##condición si encuentra otro device retorna 0
-            else:
-                return buscarCapacidad (l[1:], buscar,name,value)
-    else:
-        return buscarCapacidad (l[1:], buscar,name,value)
-                    
+                if (nom == "device"):
+                    if(value=="false"):
+                        return 1
+                    return 0  ##condición si encuentra otro device retorna 0
+    return 0                    
 
                     
 ##--Función buscarCapacidad2: Dado una lista de lineas, el tag capability y sus atributos name y value, imprime todos las capacidades de un device en específico        
@@ -240,47 +241,54 @@ def buscarCapacidad2 (l, buscar,i):
 
 ##--Función recorrerCapacidadDevice: Dado una lista de lineas(strings), 1 String(device), 1 contador i y una capacidad específica(name y value)
 ##--Imprime todos los devices que tienen dicha capacidad y también imprime cuántos encontró            
-def recorrerCapacidadDevice(l, buscar,i,name,value):
-    if(l==[] or l==""):
-        print (i)
-        return
+def recorrerCapacidadDevice(l, buscar,name,value):
+    cont=0
+    for (i, item) in enumerate(l):
+        pos = buscarHasta (item, '<', 0, 0)
+        c = obtenerChar (item, pos+1, 0)
+        if (c != '/'):
+            nom = extraerNombre (item,pos+1,0,"")
+            if (nom == buscar):
+                if ((buscarCapacidad (l[i+1:], "capability",name,value))==1):
+                    id = extraerId(item)#Para todos los que hacen fall_back de el dispositivo
+                    print (i,id)
+                    if(value=="false"):
+                        cantF=0#No busca en sus hijos la caracteristica
+                    else:
+                        cantF = buscarFallBack(l, id)
+                    cont=cont+1+cantF
     
-    pos = buscarHasta (l[0], '<', 0, 0);
-    c = obtenerChar (l[0], pos+1, 0);
-    nom = extraerNombre (l[0],pos+1,0,"")
-    if (c != '/'):
-        if (nom == buscar):
-            if ((buscarCapacidad (l[1:], "capability",name,value))==1):
-                print (l[0])
-                recorrerCapacidadDevice(l[1:], buscar, i+1,name,value)
-            else:
-                recorrerCapacidadDevice(l[1:], buscar, i,name,value)
-        else:
-            recorrerCapacidadDevice(l[1:], buscar, i,name,value)
-    else:
-        recorrerCapacidadDevice(l[1:], buscar, i,name,value)
-            
+    print ("Cantidad de devices: ",cont)            
+                
+def buscarFallBack(l, id):
+    cont=0
+    for (i, item) in enumerate(l):
+        pos = buscarHasta (item, '<', 0, 0)
+        c = obtenerChar (item, pos+1, 0)
+        if (c != '/'):
+            nom = extraerNombre (item,pos+1,0,"")
+            if (nom == "device"):
+                if ("fall_back=\""+id+"\"" in item):
+                    print (i,item)
+                    cont=cont+1
+    
+    print ("Cantidad de Fall Back: ",cont)
+    return cont            
                 
 
-def recorrerLineas (l, buscar,i):
-    if(l==[] or l==""):
-        print (i)
-        return
+def recorrerLineas (l, buscar):
+    cont=0
+    for (i, item) in enumerate(l):
+        pos = buscarHasta (item, '<', 0, 0)
+        c = obtenerChar (item, pos+1, 0)
+        if (c != '/'):
+            nom = extraerNombre (item,pos+1,0,"")
+            if (nom == buscar):
+                print (i,item)
+                cont=cont+1
+    
+    print ("Cantidad de devices: ",cont)
         
-    pos = buscarHasta (l[0], '<', 0, 0)
-    c = obtenerChar (l[0], pos+1, 0)
-    nom = extraerNombre (l[0],pos+1,0,"")
-
-
-    if (c != '/'):
-        if (nom == buscar):
-            print (l[0])
-            recorrerLineas (l[1:], buscar, i+1)
-        else:
-            recorrerLineas (l[1:], buscar, i)            
-    else:
-        recorrerLineas (l[1:], buscar, i)
-
 
 
 ##--Función recorrerDevices: Dado una lista de lineas(strings), 1 String(device), 1 contador i y los atributos específicos de 1 device(id,user_agent,fall_back)
@@ -292,9 +300,9 @@ def recorrerDevices (l, buscar,i,id,user_agent,fall_back):
         print (i)
         return
 
-    pos = buscarHasta (l[0], '<', 0, 0)
-    c = obtenerChar (l[0], pos+1, 0)
-    nom = extraerNombre (l[0],pos+1,0,[])
+    pos = buscarHasta (x, '<', 0, 0)
+    c = obtenerChar (x, pos+1, 0)
+    nom = extraerNombre (x,pos+1,0,[])
     
     if (c != '/'):
         if (nom == buscar):
@@ -321,14 +329,14 @@ def recorrerDevices2 (l, buscar,i,id,user_agent,fall_back):
         print (i)
         return
     
-    pos = buscarHasta (l[0], '<', 0, 0)
-    c = obtenerChar (l[0], pos+1, 0)
+    pos = buscarHasta (x, '<', 0, 0)
+    c = obtenerChar (x, pos+1, 0)
     nom = extraerNombre (x,pos+1,0,[])
 
     if (c != '/'):
         if (nom == buscar):
             if (buscarDevice (l[0], "device",id,user_agent,fall_back)==1):
-                buscarCapacidad2(l[1:],"capability",0)
+                buscarCapacidad2(xs,"capability",0)
             else:
                 recorrerDevices2 (l[1:], buscar, i,id,user_agent,fall_back)
         else:
@@ -347,13 +355,13 @@ def recorrerGroupDevice (l, buscar,i,name):
         print (i)
         return
     
-    pos = buscarHasta (l[0], '<', 0, 0);
-    c = obtenerChar (l[0], pos+1, 0);
-    nom = extraerNombre (l[0],pos+1,0,"")
+    pos = buscarHasta (x, '<', 0, 0);
+    c = obtenerChar (x, pos+1, 0);
+    nom = extraerNombre (x,pos+1,0,[])
 
     if (c != '/'):
         if (nom == buscar):
-            if ((buscarGrupo(l[1:], "group",name))==1):
+            if ((buscarGrupo(xs, "group",name))==1):
                 print (l[0])
                 recorrerGroupDevice (l[1:], buscar, i+1,name)
             else:
@@ -367,12 +375,12 @@ def recorrerGroupDevice (l, buscar,i,name):
 def main():
     f = open('copiawurfl.xml', 'r+')
     l=f.readlines()
-    ##recorrerLineas (l, "device", 0)
-    obtenerCapability(l,"built_in_camera", "true", 0)
+#    recorrerLineas (l, "device")
+    recorrerCapacidadDevice(l, "device","built_in_camera","true")
 ##    print(l)
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+#    main()
         
 
 
