@@ -17,88 +17,51 @@ def imprimirXml2 (a):
         imprimirXml2 (a[1:])
     
 
-
-def obtenerChar (l, pos, i):
-    if(l==[] or l==""):
+def obtenerChar (l, pos):
+    if(pos>=len(l)):
         return ' '
-    if i == pos:
-        return l[0]
-    else:
-        return obtenerChar (l[1:], pos, i+1)
-
-        
+    return l[pos]
 
 
 
-def buscarHasta (l, bus, ini, i):
-    if (l==[] or l==""):
-        return -1
-    if i < ini:
-        return buscarHasta (l[1:], bus, ini, i+1)
-    if (l[0]==bus): 
-        return i
-    
-    if (l[0]!=bus):
-        return buscarHasta (l[1:], bus, ini, i+1)
-
-    
-def buscarHastaStr (l, ini, i, nombre):
-    if (l==[] or l==""):
-        return -1
-    if (i < ini): 
-        return buscarHastaStr (l[1:],ini,i+1,nombre)
-    else:
-        if (l[0]==' ' or l[0]=='>'):
+def buscarHasta (l, bus, ini):
+    for i in range(ini,len(l)):
+        if (l[i]==bus): 
             return i
-        else:
-            return buscarHastaStr (l[1:],ini,i+1,nombre+l[0])
+    return -1
+
     
 
-def obtenerCapability (l, nom1, nom2, i):
-    if (l==[] or l==""):
-        print ("FIN")
-        return
-    
-    if(nom1 in l[0]):
-        if(nom2 in l[0]):
-            print (l[0])
-            obtenerCapability(l[1:], nom1, nom2, i+1)
-    else:
-        obtenerCapability(l[1:], nom1, nom2, i)
-        
 def extraerId(linea):
-    ini=buscarHasta (linea, '\"', 0, 0);
-    fin = buscarHasta (linea, '\"', ini+1, 0);
-    return extraerInfo(linea, ini+1, fin, 0, "")
+    ini=buscarHasta (linea, '\"', 0);
+    fin = buscarHasta (linea, '\"', ini+1);
+    return extraerInfo(linea, ini+1, fin)
         
-def extraerInfo (l,ini,fin,i,info):
-    if (l==[] or l==""):
-        return info
-    if (i < ini): 
-        return extraerInfo (l[1:],ini,fin,i+1,info)
-    else:
-        if (i==fin):
+
+
+def extraerInfo (l,ini,fin):
+    info=""
+    for i in range(ini,fin):
+        if (i>=len(l)):
             return info
         else:
-            return extraerInfo (l[1:],ini,fin,i+1,info+l[0])
+            info=info+l[i]
+    return info
 
 
-def extraerNombre (l,ini,i,nombre):
-    if (l==[] or l==""):
-        return nombre
-    if (i < ini): 
-        return extraerNombre (l[1:],ini,i+1,nombre)
-    else:
-        if (l[0]==' ' or l[0]=='>'):
+def extraerNombre (l,ini):
+    nombre=""
+    for i in range(ini,len(l)):
+        if (l[i]==' ' or l[i]=='>'):
             return nombre
         else:
-            return extraerNombre (l[1:],ini,i+1,nombre+l[0])
-
+            nombre = nombre+l[i]        
+    return nombre
 
 
 def extraerInfoGrupo (l,ini,i,detalle):
     if (l==[] or l==""):
-        return nombre
+        return detalle
     if i < ini :
         return extraerInfoGrupo (l[1:],ini,i+1,detalle)
     else:
@@ -107,57 +70,72 @@ def extraerInfoGrupo (l,ini,i,detalle):
         else:
             return extraerInfoGrupo (l[1:],ini,i+1,detalle+l[0])
 
+
+def extraerInfoGrupo2 (l,ini):
+    detalle=""
+    if (l==[] or l==""):
+        return detalle
+
+    for i in range(ini,len(l)):
+        if (l[i]=='>'):
+            return detalle
+        else:
+            detalle = detalle + l[i]
             
+    return detalle  
+            
+
 
 def extraerInfoDevice (l,ini,i,detalle):
     if (l==[] or l==""):
-        return nombre
+        return detalle
     if i < ini: 
         return extraerInfoDevice (l[1:],ini,i+1,detalle)
     else:
         if l[0]=='>':
             return detalle
         else:
-            return extraerInfoDevice (l[1:],ini,i+1,detalle+l[0])    
+            return extraerInfoDevice (l[1:],ini,i+1,detalle+l[0])
 
-
-
-
-def extraerDetalleCapab (l,ini,i,detalle):
+        
+def extraerInfoDevice2 (l,ini):
+    detalle=""
     if (l==[] or l==""):
         return detalle
-    if i < ini:
-        return extraerDetalleCapab (l[1:],ini,i+1,detalle)
-    else:
+    for(i in range(ini, len(l))):
+        if l[0]=='>':
+            return detalle
+        else:
+            detalle=detalle + l[i]
+
+    return detalle
+
+
+def extraerDetalleCapab (l,ini):
+    detalle=""
+    for i in range(ini,len(l)):
         if l[0]=='/':
             return detalle
         else:
-            return extraerDetalleCapab (l[1:],ini,i+1,detalle+l[0])
+            detalle= detalle+l[i]
+    return detalle
 
-
-
-def buscarDevice (l, buscar,id,user_agent, fall_back):
+def buscarDevice (l, buscar,id):
     if (l==[] or l==""):
-        return nombre
+        return 0
     
-    pos = buscarHasta (l[0], '<', 0, 0);
-    c = obtenerChar (l[0], pos+1, 0);
-    nom = extraerNombre (l[0],pos+1,0,[]);
-    det = extraerInfoDevice (l[0],pos + 8,0,[])
-    if c != '/':
-        if (nom == buscar):
-            if (det == "id=\""+id+"\" user_agent=\""+user_agent++"\" fall_back=\""+fall_back+"\""):
-                return 1
-            else:
-                return buscarDevice (l[1:], buscar,id,user_agent,fall_back) ##busca demas lineas
-        else:
-            if (nom == "device"):
-                return 0
-            else:
-                buscarDevice (l[1:], buscar,id,user_agent,fall_back)
-    else:
-        buscarDevice(l[1:], buscar,id,user_agent,fall_back)
-        
+    for (i, item) in enumerate(l):
+        pos = buscarHasta (item, '<', 0);
+        c = obtenerChar (item, pos+1);
+        if c != '/':
+            nom = extraerNombre (item,pos+1);
+            if (nom == buscar):
+                det = extraerInfoDevice (item,pos + 8,0,"");
+                if ("id=\""+id+"\"" in det):
+                    return 1
+                 
+    return 0
+       
 
 
 ##buscarGrupo :: ([String] , String , String) -> Integer
@@ -165,25 +143,21 @@ def buscarDevice (l, buscar,id,user_agent, fall_back):
 def buscarGrupo (l, buscar,name):
     if (l==[] or l==""):
         return 0
-    
-    pos = buscarHasta (l[0], '<', 0, 0);
-    c = obtenerChar (l[0], pos+1, 0);
-    nom = extraerNombre (l[0],pos+1,0,"");
-    det = extraerInfoGrupo (l[0],pos + 7,0,"")
-
-    if c != '/':
-        if nom == buscar:
-            if det == "id=\""++name++"\"" :
-                return 1
+    for (i, item) in enumerate(l):
+        pos = buscarHasta (item, '<', 0);
+        c = obtenerChar (item, pos+1);
+        
+        if c != '/':
+            nom = extraerNombre (item,pos+1);
+            if nom == buscar:
+                det = extraerInfoGrupo (item,pos + 7,0,"")
+                if det == "id=\""+name+"\"" :
+                    return 1
             else:
-                buscarGrupo (l[1:], buscar,name) ##--busca demás lineas
-        else:
-            if nom == "device" :
-                return 0
-            else:
-                buscarGrupo (l[1:], buscar,name)
-    else:
-        buscarGrupo (l[1:], buscar,name)
+                if nom == "device" :
+                    return 0
+                
+        
                     
 
 
@@ -193,18 +167,18 @@ def buscarGrupo (l, buscar,name):
 ##--Y si encuentra otro tag device retorna 0; quiere decir que buscarCapacidad solo va buscar solo las capacidades de ese tag device
 def buscarCapacidad (l, buscar,name,value):
     for (i, item) in enumerate(l):
-        pos = buscarHasta (item, '<', 0, 0);
-        c = obtenerChar (item, pos+1, 0);
+        pos = buscarHasta (item, '<', 0);
+        c = obtenerChar (item, pos+1);
         if (c != '/'):
-            nom = extraerNombre (item,pos+1,0,"");
+            nom = extraerNombre (item,pos+1);
             if (nom == buscar):
-                det = extraerDetalleCapab (item,pos + 12,0,"")
-                ini=buscarHasta (det, '\"', 0, 0);
-                fin = buscarHasta (det, '\"', ini+1, 0);
-                nCap= extraerInfo(det, ini+1, fin, 0, "")
-                ini=buscarHasta (det, '\"', fin+1, 0);
-                fin = buscarHasta (det, '\"', ini+1, 0);
-                vCap= extraerInfo(det, ini+1, fin, 0, "")
+                det = extraerDetalleCapab (item,pos + 12)
+                ini=buscarHasta (det, '\"', 0);
+                fin = buscarHasta (det, '\"', ini+1);
+                nCap= extraerInfo(det, ini+1, fin)
+                ini=buscarHasta (det, '\"', fin+1);
+                fin = buscarHasta (det, '\"', ini+1);
+                vCap= extraerInfo(det, ini+1, fin)
                 if ((name in nCap) and (value in vCap)):
                     return 1
             else:
@@ -212,42 +186,37 @@ def buscarCapacidad (l, buscar,name,value):
                     if(value=="false"):
                         return 1
                     return 0  ##condición si encuentra otro device retorna 0
-    return 0                    
+    return 0
+
+
 
                     
-##--Función buscarCapacidad2: Dado una lista de lineas, el tag capability y sus atributos name y value, imprime todos las capacidades de un device en específico        
-##buscarCapacidad2 :: ([String] , String , Integer) -> IO()            
-##buscarCapacidad2 ([], buscar ,i) = print (" Fin "  ++ show i)
-def buscarCapacidad2 (l, buscar,i):
-    if (l==[] or l==""):
-        print (" Fin total %d", i)
-    
-    pos = buscarHasta (l[0], '<', 0, 0);
-    c = obtenerChar (l[0], pos+1, 0);
-    nom = extraerNombre (l[0],pos+1,0,"")
 
-    if (c != '/'):
-        if (nom == buscar):
-            print (l[0])
-            buscarCapacidad2 (l[1:], buscar, i+1)
-        else:
-            if(nom=="device"):
-                print ("")
-            else:
-                buscarCapacidad2 (l[1:], buscar, i)    
-    else:
-        buscarCapacidad2 (l[1:], buscar, i)        
-
-
-##--Función recorrerCapacidadDevice: Dado una lista de lineas(strings), 1 String(device), 1 contador i y una capacidad específica(name y value)
-##--Imprime todos los devices que tienen dicha capacidad y también imprime cuántos encontró            
-def recorrerCapacidadDevice(l, buscar,name,value):
+def presentarCapacidades (l, buscar):
     cont=0
     for (i, item) in enumerate(l):
-        pos = buscarHasta (item, '<', 0, 0)
-        c = obtenerChar (item, pos+1, 0)
+        pos = buscarHasta (item, '<', 0);
+        c = obtenerChar (item, pos+1);
+    
         if (c != '/'):
-            nom = extraerNombre (item,pos+1,0,"")
+            nom = extraerNombre (item,pos+1)
+            if (nom == buscar):
+                print (item)
+                cont=cont+1
+            else:
+                if(nom=="device"):
+                    break;
+    print (" Fin total %d", cont)
+    
+
+     
+def recorrerCapacidadDevice(l, buscar,name,value,fall):
+    cont=0
+    for (i, item) in enumerate(l):
+        pos = buscarHasta (item, '<', 0)
+        c = obtenerChar (item, pos+1)
+        if (c != '/'):
+            nom = extraerNombre (item,pos+1)
             if (nom == buscar):
                 if ((buscarCapacidad (l[i+1:], "capability",name,value))==1):
                     id = extraerId(item)#Para todos los que hacen fall_back de el dispositivo
@@ -255,132 +224,185 @@ def recorrerCapacidadDevice(l, buscar,name,value):
                     if(value=="false"):
                         cantF=0#No busca en sus hijos la caracteristica
                     else:
-                        cantF = buscarFallBack(l, id)
+                        cantF = buscarFallBack(fall, id)
                     cont=cont+1+cantF
     
     print ("Cantidad de devices: ",cont)            
                 
-def buscarFallBack(l, id):
+
+def recorrerFallbackSubStr(l, buscar, id):
     cont=0
     for (i, item) in enumerate(l):
-        pos = buscarHasta (item, '<', 0, 0)
-        c = obtenerChar (item, pos+1, 0)
+        pos = buscarHasta (item, '<', 0)
+        c = obtenerChar (item, pos+1)
         if (c != '/'):
-            nom = extraerNombre (item,pos+1,0,"")
-            if (nom == "device"):
-                if ("fall_back=\""+id+"\"" in item):
-                    print (i,item)
+            nom = extraerNombre (item,pos+1)
+            if (nom == buscar):
+                if ("fall_back=\""+id in item):
+                    print (i, item)
                     cont=cont+1
     
-    print ("Cantidad de Fall Back: ",cont)
+    print ("Cantidad de Fall Back Substring: ",cont)
+
+
+def recorrerDeviceSubStr (l, buscar,id):
+    cont=0
+    for (i, item) in enumerate(l):
+        pos = buscarHasta (item, '<', 0)
+        c = obtenerChar (item, pos+1)
+        if (c != '/'):
+            nom = extraerNombre (item,pos+1)
+            if (nom == buscar):
+                if ("id=\""+id in item):
+                    print (i, item)
+                    cont=cont+1
+    
+    print ("Cantidad de Devices Substring: ",cont)
+    
+
+
+def buscarFallBack(fall, idB):
+    cont=0
+    for (i, item) in enumerate(fall):
+        pos = buscarHasta (item, '<', 0)
+        c = obtenerChar (item, pos+1)
+        if (c != '/'):
+            nom = extraerNombre (item,pos+1)
+            if (nom == "fallback"):
+                id = extraerId(item)
+                if (id==idB):
+                    cont=presentarFallBacks (fall[i+1:])
+                    break
+    
+    print (" Cantidad de Fall Back:", cont)
     return cont            
                 
+def presentarFallBacks (fall):
+    cont=0
+    for (i, item) in enumerate(fall):
+        pos = buscarHasta (item, '<', 0);
+        c = obtenerChar (item, pos+1);
+    
+        if (c != '/'):
+            nom = extraerNombre (item,pos+1)
+            if (nom == "device"):
+                print (item)
+                cont=cont+1
+            else:
+                if(nom=="fallback"):
+                    break;
+    return cont
+
+
+
 
 def recorrerLineas (l, buscar):
     cont=0
     for (i, item) in enumerate(l):
-        pos = buscarHasta (item, '<', 0, 0)
-        c = obtenerChar (item, pos+1, 0)
+        pos = buscarHasta (item, '<', 0)
+        c = obtenerChar (item, pos+1)
         if (c != '/'):
-            nom = extraerNombre (item,pos+1,0,"")
+            nom = extraerNombre (item,pos+1)
             if (nom == buscar):
                 print (i,item)
                 cont=cont+1
     
     print ("Cantidad de devices: ",cont)
         
+def generarFallBacks(l, buscar):
+    f = open('fallbacks.xml', 'w')
+    cont=0
+    for (i, item) in enumerate(l):
+        pos = buscarHasta (item, '<', 0)
+        c = obtenerChar (item, pos+1)
+        if (c != '/'):
+            nom = extraerNombre (item,pos+1)
+            if (nom == buscar):
+                print (cont)
+                #if (cont==10):
+                #    break
+                id = extraerId(item)#Para todos los que hacen fall_back de el dispositivo
+                f.write('<fallback id=\"'+id+"\">\n")
+                buscarFallBack2(l, id,f)
+                cont=cont+1
+    f.close()
 
-
-##--Función recorrerDevices: Dado una lista de lineas(strings), 1 String(device), 1 contador i y los atributos específicos de 1 device(id,user_agent,fall_back)
-##--Si lo encuentra gracias a la funcion BuscarDevice, lo imprime indicando 1 si lo encontró y 0 si no lo encontró                    
-##recorrerDevices :: ([String] , String , Integer,String,String,String) -> IO()
-##recorrerDevices ([], buscar ,i,id,user_agent,fall_back) = print (i)
-def recorrerDevices (l, buscar,i,id,user_agent,fall_back):  
-    if(l==[] or l==""):
-        print (i)
-        return
-
-    pos = buscarHasta (x, '<', 0, 0)
-    c = obtenerChar (x, pos+1, 0)
-    nom = extraerNombre (x,pos+1,0,[])
+def buscarFallBack2(l, id,f):
+    for (i, item) in enumerate(l):
+        pos = buscarHasta (item, '<', 0)
+        c = obtenerChar (item, pos+1)
+        if (c != '/'):
+            nom = extraerNombre (item,pos+1)
+            if (nom == "device"):
+                if ("fall_back=\""+id+"\"" in item):
+                    f.write(item)
     
-    if (c != '/'):
-        if (nom == buscar):
-            if (buscarDevice (l[0], "device",id,user_agent,fall_back)==1):
-                print (l[0])
-                recorrerDevices (l[1:], buscar, i+1,id,user_agent,fall_back)
-            else:
-                recorrerDevices (l[1:], buscar, i,id,user_agent,fall_back)
-        else:
-            recorrerDevices (l[1:], buscar, i,id,user_agent,fall_back)
-    else:
-        recorrerDevices (l[1:], buscar, i,id,user_agent,fall_back)            
-
-            
+          
+    
 
 
-
-##--Función recorrerDevices2: Dado una lista de lineas(strings), 1 String(device), 1 contador i y los atributos específicos de 1 device(id,user_agent,fall_back)
+##--Función recorrerDevices: Dado una lista de lineas(strings), 1 String(device), y el id de 1 device en especifico
 ##--Si lo encuentra imprime todas las capacidades de ese device y cuántas encontró            
-##recorrerDevices2 :: ([String] , String , Integer,String,String,String) -> IO()
-##recorrerDevices2 ([], buscar ,i,id,user_agent,fall_back) = print (i)
-def recorrerDevices2 (l, buscar,i,id,user_agent,fall_back):
-    if(l==[] or l==""):
-        print (i)
-        return
-    
-    pos = buscarHasta (x, '<', 0, 0)
-    c = obtenerChar (x, pos+1, 0)
-    nom = extraerNombre (x,pos+1,0,[])
-
-    if (c != '/'):
-        if (nom == buscar):
-            if (buscarDevice (l[0], "device",id,user_agent,fall_back)==1):
-                buscarCapacidad2(xs,"capability",0)
-            else:
-                recorrerDevices2 (l[1:], buscar, i,id,user_agent,fall_back)
-        else:
-            recorrerDevices2 (l[1:], buscar, i,id,user_agent,fall_back)
-    else:
-        recorrerDevices2 (l[1:], buscar, i,id,user_agent,fall_back)    
-                
-
+def recorrerDevices (l, buscar,id):
+    cont=0;
+    for (i, item) in enumerate(l):
+        pos = buscarHasta (item, '<', 0)
+        c = obtenerChar (item, pos+1)
+        if (c != '/'):
+            nom = extraerNombre (item,pos+1)
+            if (nom == buscar):
+                idB = extraerId(item)
+                if (id == idB):
+                    presentarCapacidades(l[i+1:],"capability")
+                    break
+                        
 
 ##--Función recorrerGroupDevice: Dado una lista de lineas(strings), 1 String(device), 1 contador i y un String(grupo en específico)
 ##--Retorna los devices que pertenecen al grupo indicado y cuántos encontró
 ##recorrerGroupDevice :: ([String] , String , Integer,String) -> IO()
 ##recorrerGroupDevice ([], buscar ,i,name) = print (buscar++" soportan ("++name++"): "  ++ show i)
-def recorrerGroupDevice (l, buscar,i,name):
+def recorrerGroupDevice (l, buscar,i,name,fall):
+    cont=0
     if(l==[] or l==""):
         print (i)
         return
+    for (i, item) in enumerate(l):
+        pos = buscarHasta (item, '<', 0);
+        c = obtenerChar(item, pos+1);
+        nom = extraerNombre (item,pos+1)
     
-    pos = buscarHasta (x, '<', 0, 0);
-    c = obtenerChar (x, pos+1, 0);
-    nom = extraerNombre (x,pos+1,0,[])
-
-    if (c != '/'):
-        if (nom == buscar):
-            if ((buscarGrupo(xs, "group",name))==1):
-                print (l[0])
-                recorrerGroupDevice (l[1:], buscar, i+1,name)
-            else:
-                recorrerGroupDevice (l[1:], buscar, i,name)
-        else:
-            recorrerGroupDevice (l[1:], buscar, i,name)
-    else:
-        recorrerGroupDevice (l[1:], buscar, i,name)    
+        if (c != '/'):
+            if (nom == buscar):
+                if ((buscarGrupo(l[i+1:], "group",name))==1):
+                    print (item)
+                    cantF = buscarFallBack(fall, id)
+                    cont=cont+1+cantF
+    print("Total %d", cont)                
     
         
+def main2():
+    f = open('copiawurfl.xml', 'r+')
+    l=f.readlines()
+    f2 = open('fallbacks.xml', 'r+')
+    fall=f2.readlines()
+#    recorrerGroupDevice (l, "device", 0,"ajax",fall)
+#    recorrerDevices(l, "device","generic_mobile")
+#    recorrerLineas (l, "device")
+#    recorrerCapacidadDevice(l, "device","built_in_camera","true",fall)
+    recorrerCapacidadDevice(l, "device","mobile_browser","Nokia",fall)
+#    recorrerCapacidadDevice(l, "device","playback_mp4","true",fall)
+
+
+#Generar archivo de FallBacks    
 def main():
     f = open('copiawurfl.xml', 'r+')
     l=f.readlines()
-#    recorrerLineas (l, "device")
-    recorrerCapacidadDevice(l, "device","built_in_camera","true")
+    generarFallBacks (l, "device")
+
 ##    print(l)
 
-#if __name__ == "__main__":
-#    main()
+if __name__ == "__main__":
+    main()
         
 
 
