@@ -1,0 +1,140 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%% END Article customizations
+
+\usepackage[spanish]{babel}
+\usepackage{listings} 
+%%% The "real" document content comes below...
+
+
+\title{\fontsize{30}{0} \bf PROYECTO: PARSEO DE XML}
+\author{\\Autores: \\  \\-Cristina Barreno \\ -Sixto Castro \\ -Jordy Vasquez\\ \\}
+\thispagestyle{empty}
+\begin{document}
+
+\newpage
+
+ \includegraphics[width=3cm]{./imagenes/Espol.png}{ \fontsize{18}{0} \bf ESCUELA SUPERIOR \\}
+\begin{center}
+{\fontsize{18}{0} \bf POLITÉCNICA DEL LITORAL\\}
+\vspace{2cm}
+{\LARGE{ DOCUMENTACIÓN DEL PROYECTO DE PYHTON }}\\
+\vspace{2cm}
+{\LARGE{ Materia: Lenguajes de Programación }}\\
+\vspace{2cm}
+{\LARGE{ Paralelo: 1}}\\
+\vspace{2cm}
+{\LARGE{Fecha de entrega: \\ Miércoles, 19 de Febrero del 2014}}
+\thispagestyle{empty}
+\end{center}
+
+
+\maketitle
+
+
+
+\newpage
+\tableofcontents % No hace falta un TOC en un artículo corto
+\thispagestyle{empty}
+\addtocontents{toc}{\protect\thispagestyle{empty}}
+
+\newpage
+\section{\fontsize{14}{0} \bf Introducción}
+El proceso de parseo consiste en transformar una serie de simbolos y transformarlos en una estructura apropiada para ser procesada, un parseador es un programa que se encarga de realizar este proceso. En el actual proyecto se realizará el parseo de un archivo xml en el lenguaje de programación Pyhton.\\\\
+Pyhton es un lenguaje interpretado de propósito general que ha cojido popularidad en los ultimos años, siendo un lenguaje multiplataforma y multiparadigma.\\\\
+
+\section{\fontsize{14}{0} \bf Desarrollo}
+El proyecto consiste en realizar un parseo de un archivo xml en el lenguaje Python, para esto se necesito primero comprobar si el archivo xml que nos entregaron posee una sintaxis correcta, a partir de esto procedemos a realizar el parseo  del xml, devolviendonos un árbol de parseo.\\\\
+Se solicita que se realicen busquedas en el árbol estilos querys para lo cual se implementaron diferentes funciones en el proyecto para realizar estas busquedas.\\\\
+
+\section{\fontsize{14}{0} \bf Alcances}
+\begin{itemize}
+\item Se recibe un archivo .xml y a partir de ese se realiza el árbol de parseo, pero antes se verifica si el xml que leemos tiene una sintaxis correcta.\\
+\item Se realizan  diferentes tipos de consultas, durante este proceso se crea un archivo adicional en donde cada device del documento original posee los atributos que hereda del fallback que posea para realizar busquedas a futuras más efecientes.\\\\
+\end{itemize}
+
+\newpage
+\section{\fontsize{14}{0} \bf Estilos de Query}
+ Se crearon funciones que busquen ciertos tipos de querys básicos, estas funciones imprimen cuales y cuantos cumplen con un determinado query.\\
+Los tipos de querys que se desarrollaron son:
+\begin{itemize}
+ \item Búsqueda de un device que tenga un determinado atributo(ya sea que lo tenga en su declaración o lo obtenga por herencia).\\
+ \item Búsqueda de todos los devices, grupos y capabilities disponibles.\\
+\item Búsqueda de todos las capabilities y grupos que posee un device.\\
+\item Búsqueda de los devices que poseen tal capability.\\
+\item Búsqueda de devices que poseen cierto grupo indicado.\\
+\item Búsqueda de un substing dentro de un atributo de algun device, group o capability
+
+\end{itemize}
+
+\newpage
+\section{\fontsize{14}{0} \bf Observaciones}
+\begin{itemize}
+\item Costo de tiempo de ejecución muy altos en ejecutar el algoritmos de busqueda debido a que habia que hacer fallbacks de los diferentes devices.
+\item Cuando se trabaja de modo orientado a objetos usualmente se usa self que es una referencia a uno mismo similar al this en java
+\item Programar en Python es sencillo puesto que es muy parecido a programar en C y en Java 
+\item El código es muy reducido debido a que se evita el uso de llaves por lo que es muy importante el espaciado que usemos.
+
+\end{itemize}
+
+
+\section{\fontsize{14}{0} \bf Conclusiones}
+
+\begin{itemize}
+\item Python es un lenguaje de programación multiparadigma, ya que soporta orientación a objetos, programación imperativa y, en menor medida, programación funcional.
+\item Existen ciertos cambios en la sintaxis entre las diferentes versiones de Python 2.7 y 3.3.
+\item Python es un lenguaje sencillo de aprender si se conoce como programar en C y en Java puesto que conocer esto lo hace muy intuitivo
+\item Realizar el parseador en Python conllevo mucho procesamiento y tiempo de ejecucion a diferencia de cuando lo realizamos en Haskell el cual al ser un lenguajes funcional ya esta optimizado para este tipo de procesamientos.
+
+\end{itemize}
+
+\end{document}
