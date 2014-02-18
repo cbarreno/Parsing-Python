@@ -32,6 +32,20 @@ def buscarHasta (l, bus, ini):
 
     
 
+def obtenerCapability (l, nom1, nom2, i):
+    if (l==[] or l==""):
+        print ("FIN")
+        return
+    
+    if(nom1 in l[0]):
+        if(nom2 in l[0]):
+            print (l[0])
+            obtenerCapability(l[1:], nom1, nom2, i+1)
+    else:
+        obtenerCapability(l[1:], nom1, nom2, i)
+        
+
+
 def extraerId(linea):
     ini=buscarHasta (linea, '\"', 0);
     fin = buscarHasta (linea, '\"', ini+1);
@@ -47,6 +61,7 @@ def extraerInfo (l,ini,fin):
         else:
             info=info+l[i]
     return info
+
 
 
 def extraerNombre (l,ini):
@@ -70,6 +85,7 @@ def extraerInfoGrupo (l,ini,i,detalle):
         else:
             return extraerInfoGrupo (l[1:],ini,i+1,detalle+l[0])
 
+            
 
 def extraerInfoGrupo2 (l,ini):
     detalle=""
@@ -84,6 +100,8 @@ def extraerInfoGrupo2 (l,ini):
             
     return detalle  
             
+            
+
 
 
 def extraerInfoDevice (l,ini,i,detalle):
@@ -95,20 +113,21 @@ def extraerInfoDevice (l,ini,i,detalle):
         if l[0]=='>':
             return detalle
         else:
-            return extraerInfoDevice (l[1:],ini,i+1,detalle+l[0])
+            return extraerInfoDevice (l[1:],ini,i+1,detalle+l[0])    
 
-        
+
 def extraerInfoDevice2 (l,ini):
     detalle=""
     if (l==[] or l==""):
         return detalle
-    for(i in range(ini, len(l))):
-        if l[0]=='>':
+    for i in range(ini,len(l)):
+        if (l[i]=='>'):
             return detalle
         else:
             detalle=detalle + l[i]
 
     return detalle
+
 
 
 def extraerDetalleCapab (l,ini):
@@ -130,12 +149,16 @@ def buscarDevice (l, buscar,id):
         if c != '/':
             nom = extraerNombre (item,pos+1);
             if (nom == buscar):
+                id = extraerId(item)
                 det = extraerInfoDevice (item,pos + 8,0,"");
                 if ("id=\""+id+"\"" in det):
                     return 1
                  
-    return 0
-       
+#             else:
+#                 if (nom == "device"):
+#                     return 0
+#                 
+        
 
 
 ##buscarGrupo :: ([String] , String , String) -> Integer
@@ -186,12 +209,12 @@ def buscarCapacidad (l, buscar,name,value):
                     if(value=="false"):
                         return 1
                     return 0  ##condición si encuentra otro device retorna 0
-    return 0
-
-
+    return 0                    
 
                     
-
+##--Función buscarCapacidad2: Dado una lista de lineas, el tag capability y sus atributos name y value, imprime todos las capacidades de un device en específico        
+##buscarCapacidad2 :: ([String] , String , Integer) -> IO()            
+##buscarCapacidad2 ([], buscar ,i) = print (" Fin "  ++ show i)
 def presentarCapacidades (l, buscar):
     cont=0
     for (i, item) in enumerate(l):
@@ -209,60 +232,31 @@ def presentarCapacidades (l, buscar):
     print (" Fin total %d", cont)
     
 
-     
+##--Función recorrerCapacidadDevice: Dado una lista de lineas(strings), 1 String(device), 1 contador i y una capacidad específica(name y value)
+##--Imprime todos los devices que tienen dicha capacidad y también imprime cuántos encontró            
 def recorrerCapacidadDevice(l, buscar,name,value,fall):
     cont=0
+    lIds=[]
     for (i, item) in enumerate(l):
         pos = buscarHasta (item, '<', 0)
         c = obtenerChar (item, pos+1)
         if (c != '/'):
             nom = extraerNombre (item,pos+1)
             if (nom == buscar):
-                if ((buscarCapacidad (l[i+1:], "capability",name,value))==1):
-                    id = extraerId(item)#Para todos los que hacen fall_back de el dispositivo
-                    print (i,id)
-                    if(value=="false"):
-                        cantF=0#No busca en sus hijos la caracteristica
-                    else:
-                        cantF = buscarFallBack(fall, id)
-                    cont=cont+1+cantF
-    
-    print ("Cantidad de devices: ",cont)            
+                id = extraerId(item)#Para todos los que hacen fall_back de el dispositivo
+                if(existeEnLista(lIds,id)==False):
+                    if ((buscarCapacidad (l[i+1:], "capability",name,value))==1):
+                        print (i,id)
+                        lIds.append(id)
+                        if(value=="false"):
+                            cantF=0#No busca en sus hijos la caracteristica
+                        else:
+                            lIds = buscarFallBack(fall, id,0,lIds)
+                        print ("LEN: ",len(lIds))
+                    
+    print ("Cantidad de devices: ",len(lIds))            
                 
-
-def recorrerFallbackSubStr(l, buscar, id):
-    cont=0
-    for (i, item) in enumerate(l):
-        pos = buscarHasta (item, '<', 0)
-        c = obtenerChar (item, pos+1)
-        if (c != '/'):
-            nom = extraerNombre (item,pos+1)
-            if (nom == buscar):
-                if ("fall_back=\""+id in item):
-                    print (i, item)
-                    cont=cont+1
-    
-    print ("Cantidad de Fall Back Substring: ",cont)
-
-
-def recorrerDeviceSubStr (l, buscar,id):
-    cont=0
-    for (i, item) in enumerate(l):
-        pos = buscarHasta (item, '<', 0)
-        c = obtenerChar (item, pos+1)
-        if (c != '/'):
-            nom = extraerNombre (item,pos+1)
-            if (nom == buscar):
-                if ("id=\""+id in item):
-                    print (i, item)
-                    cont=cont+1
-    
-    print ("Cantidad de Devices Substring: ",cont)
-    
-
-
-def buscarFallBack(fall, idB):
-    cont=0
+def buscarFallBack(fall, idB,nivel,lIds):
     for (i, item) in enumerate(fall):
         pos = buscarHasta (item, '<', 0)
         c = obtenerChar (item, pos+1)
@@ -271,14 +265,19 @@ def buscarFallBack(fall, idB):
             if (nom == "fallback"):
                 id = extraerId(item)
                 if (id==idB):
-                    cont=presentarFallBacks (fall[i+1:])
+                    lIds = presentarFallBacks (fall[i+1:],fall,nivel+1,lIds)
                     break
     
-    print (" Cantidad de Fall Back:", cont)
-    return cont            
+    return lIds
                 
-def presentarFallBacks (fall):
-    cont=0
+def existeEnLista(lista, id):
+    for (i, item) in enumerate(lista):
+        if(id==item):
+            return True
+        
+    return False
+
+def presentarFallBacks (fall,fallComp,nivel,lIds):
     for (i, item) in enumerate(fall):
         pos = buscarHasta (item, '<', 0);
         c = obtenerChar (item, pos+1);
@@ -286,15 +285,17 @@ def presentarFallBacks (fall):
         if (c != '/'):
             nom = extraerNombre (item,pos+1)
             if (nom == "device"):
-                print (item)
-                cont=cont+1
+                id = extraerId(item)#Para todos los que hacen fall_back de el dispositivo
+                lIds.append(id)
+                esp=""
+                for i in range(0,nivel):
+                    esp=esp+"\t"
+                print (esp,nivel," - ",id)
+                lIds = buscarFallBack(fallComp, id,nivel,lIds)
             else:
                 if(nom=="fallback"):
                     break;
-    return cont
-
-
-
+    return lIds
 
 def recorrerLineas (l, buscar):
     cont=0
@@ -338,11 +339,13 @@ def buscarFallBack2(l, id,f):
                     f.write(item)
     
           
-    
 
 
-##--Función recorrerDevices: Dado una lista de lineas(strings), 1 String(device), y el id de 1 device en especifico
+
+##--Función recorrerDevices2: Dado una lista de lineas(strings), 1 String(device), 1 contador i y los atributos específicos de 1 device(id,user_agent,fall_back)
 ##--Si lo encuentra imprime todas las capacidades de ese device y cuántas encontró            
+##recorrerDevices2 :: ([String] , String , Integer,String,String,String) -> IO()
+##recorrerDevices2 ([], buscar ,i,id,user_agent,fall_back) = print (i)
 def recorrerDevices (l, buscar,id):
     cont=0;
     for (i, item) in enumerate(l):
@@ -356,13 +359,40 @@ def recorrerDevices (l, buscar,id):
                     presentarCapacidades(l[i+1:],"capability")
                     break
                         
+                        
+def recorrerFallbackSubStr(l, buscar, id):
+    cont=0
+    for (i, item) in enumerate(l):
+        pos = buscarHasta (item, '<', 0)
+        c = obtenerChar (item, pos+1)
+        if (c != '/'):
+            nom = extraerNombre (item,pos+1)
+            if (nom == buscar):
+                if ("fall_back=\""+id in item):
+                    print (i, item)
+                    cont=cont+1
+    
+    print ("Cantidad de Fall Back Substring: ",cont)
 
-##--Función recorrerGroupDevice: Dado una lista de lineas(strings), 1 String(device), 1 contador i y un String(grupo en específico)
-##--Retorna los devices que pertenecen al grupo indicado y cuántos encontró
-##recorrerGroupDevice :: ([String] , String , Integer,String) -> IO()
-##recorrerGroupDevice ([], buscar ,i,name) = print (buscar++" soportan ("++name++"): "  ++ show i)
+
+def recorrerDeviceSubStr (l, buscar,id):
+    cont=0
+    for (i, item) in enumerate(l):
+        pos = buscarHasta (item, '<', 0)
+        c = obtenerChar (item, pos+1)
+        if (c != '/'):
+            nom = extraerNombre (item,pos+1)
+            if (nom == buscar):
+                if ("id=\""+id in item):
+                    print (i, item)
+                    cont=cont+1
+    
+    print ("Cantidad de Devices Substring: ",cont)
+
+
 def recorrerGroupDevice (l, buscar,i,name,fall):
     cont=0
+    lIds=[]
     if(l==[] or l==""):
         print (i)
         return
@@ -374,13 +404,19 @@ def recorrerGroupDevice (l, buscar,i,name,fall):
         if (c != '/'):
             if (nom == buscar):
                 if ((buscarGrupo(l[i+1:], "group",name))==1):
-                    print (item)
-                    cantF = buscarFallBack(fall, id)
-                    cont=cont+1+cantF
-    print("Total %d", cont)                
+                    print (i,id)
+                    lIds.append(id)
+                    if(value=="false"):
+                        cantF=0#No busca en sus hijos la caracteristica
+                    else:
+                        lIds = buscarFallBack(fall, id,0,lIds)
+                    print ("LEN: ",len(lIds))
+                
+    print ("Cantidad de devices: ",len(lIds))         
+                    
     
         
-def main2():
+def main():
     f = open('copiawurfl.xml', 'r+')
     l=f.readlines()
     f2 = open('fallbacks.xml', 'r+')
@@ -388,13 +424,12 @@ def main2():
 #    recorrerGroupDevice (l, "device", 0,"ajax",fall)
 #    recorrerDevices(l, "device","generic_mobile")
 #    recorrerLineas (l, "device")
-#    recorrerCapacidadDevice(l, "device","built_in_camera","true",fall)
-    recorrerCapacidadDevice(l, "device","mobile_browser","Nokia",fall)
+    recorrerCapacidadDevice(l, "device","built_in_camera","true",fall)
+#    recorrerCapacidadDevice(l, "device","mobile_browser","Nokia",fall)
 #    recorrerCapacidadDevice(l, "device","playback_mp4","true",fall)
 
-
 #Generar archivo de FallBacks    
-def main():
+def main2():
     f = open('copiawurfl.xml', 'r+')
     l=f.readlines()
     generarFallBacks (l, "device")
