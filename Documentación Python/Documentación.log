@@ -1,18 +1,20 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2013.1.12)  18 FEB 2014 16:51
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.10.16)  19 FEB 2014 04:40
 entering extended mode
 **Documentación.tex
-("C:\Users\User\Documents\GitHub\Documentación Python\Documentación.tex"
+
+("C:\Users\MARLE\Documents\GitHub\Parsing-Python\Documentación Python\Document
+ación.tex"
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
 abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
 croatian, czech, danish, dutch, esperanto, estonian, farsi, finnish, french, ga
-lician, german, german-x-2009-06-19, greek, gujarati, hindi, hungarian, iceland
-ic, indonesian, interlingua, irish, italian, kannada, kurmanji, lao, latin, lat
-vian, lithuanian, malayalam, marathi, mongolian, mongolianlmc, monogreek, ngerm
-an, ngerman-x-2009-06-19, nynorsk, oriya, panjabi, pinyin, polish, portuguese, 
-romanian, russian, sanskrit, serbian, slovak, slovenian, spanish, swedish, swis
-sgerman, tamil, telugu, turkish, turkmen, ukenglish, ukrainian, uppersorbian, u
-senglishmax, welsh, loaded.
+lician, german, german-x-2012-05-30, greek, gujarati, hindi, hungarian, iceland
+ic, indonesian, interlingua, irish, italian, kannada, kurmanji, latin, latvian,
+ lithuanian, malayalam, marathi, mongolian, mongolianlmc, monogreek, ngerman, n
+german-x-2012-05-30, nynorsk, oriya, panjabi, pinyin, polish, portuguese, roman
+ian, russian, sanskrit, serbian, slovak, slovenian, spanish, swedish, swissgerm
+an, tamil, telugu, turkish, turkmen, ukenglish, ukrainian, uppersorbian, usengl
+ishmax, welsh, loaded.
 ("C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls"
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
 ("C:\Program Files\MiKTeX 2.9\tex\latex\base\size11.clo"
@@ -307,7 +309,7 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 \Gin@req@height=\dimen111
 \Gin@req@width=\dimen112
 )
-(C:\Users\User\AppData\Roaming\MiKTeX\2.9\tex\latex\booktabs\booktabs.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\booktabs\booktabs.sty"
 Package: booktabs 2005/04/14 v1.61803 publication quality tables
 \heavyrulewidth=\dimen113
 \lightrulewidth=\dimen114
@@ -335,7 +337,7 @@ Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
 \extratabsurround=\skip43
 \backup@length=\skip44
 )
-(C:\Users\User\AppData\Roaming\MiKTeX\2.9\tex\latex\paralist\paralist.sty
+(C:\Users\MARLE\AppData\Roaming\MiKTeX\2.9\tex\latex\paralist\paralist.sty
 Package: paralist 2013/06/09 v2.4 Extended list environments
 \pltopsep=\skip45
 \plpartopsep=\skip46
@@ -349,13 +351,13 @@ Package: verbatim 2003/08/22 v1.5q LaTeX2e package for verbatim enhancements
 \verbatim@line=\toks21
 \verbatim@in@stream=\read1
 )
-(C:\Users\User\AppData\Roaming\MiKTeX\2.9\tex\latex\subfig\subfig.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\subfig\subfig.sty"
 Package: subfig 2005/06/28 ver: 1.3 subfig package
 
-(C:\Users\User\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\caption.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\caption\caption.sty"
 Package: caption 2013/05/02 v3.3-89 Customizing captions (AR)
 
-(C:\Users\User\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\caption3.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\caption\caption3.sty"
 Package: caption3 2013/05/02 v1.6-88 caption3 kernel (AR)
 Package caption3 Info: TeX engine: e-TeX on input line 57.
 \captionmargin=\dimen128
@@ -382,7 +384,7 @@ Package caption3 Info: TeX engine: e-TeX on input line 57.
 \sf@top=\skip52
 \sf@bottom=\skip53
 )
-(C:\Users\User\AppData\Roaming\MiKTeX\2.9\tex\latex\fancyhdr\fancyhdr.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\fancyhdr\fancyhdr.sty"
 \fancy@headwidth=\skip54
 \f@ncyO@elh=\skip55
 \f@ncyO@erh=\skip56
@@ -393,18 +395,18 @@ Package caption3 Info: TeX engine: e-TeX on input line 57.
 \f@ncyO@olf=\skip61
 \f@ncyO@orf=\skip62
 )
-(C:\Users\User\AppData\Roaming\MiKTeX\2.9\tex\latex\sectsty\sectsty.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\sectsty\sectsty.sty"
 Package: sectsty 2002/02/25 v2.0.2 Commands to change all sectional heading sty
 les
 )
-(C:\Users\User\AppData\Roaming\MiKTeX\2.9\tex\latex\tocbibind\tocbibind.sty
+("C:\Program Files\MiKTeX 2.9\tex\latex\tocbibind\tocbibind.sty"
 Package: tocbibind 2010/10/13 v1.5k extra ToC listings
 Package tocbibind Info: The document has section divisions on input line 50.
 
 
 Package tocbibind Note: Using section or other style headings.
 
-) (C:\Users\User\AppData\Roaming\MiKTeX\2.9\tex\latex\tocloft\tocloft.sty
+) ("C:\Program Files\MiKTeX 2.9\tex\latex\tocloft\tocloft.sty"
 Package: tocloft 2013/05/02 v2.3f parameterised ToC, etc., typesetting
 Package tocloft Info: The document has section divisions on input line 44.
 \cftparskip=\skip63
@@ -470,7 +472,7 @@ Package babel Info: Making . an active character on input line 585.
 Package babel Info: Making < an active character on input line 630.
 Package babel Info: Making > an active character on input line 630.
 ))
-(C:\Users\User\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\listings.sty
+(C:\Users\MARLE\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\listings.sty
 \lst@mode=\count106
 \lst@gtempboxa=\box26
 \lst@token=\toks23
@@ -484,18 +486,19 @@ Package babel Info: Making > an active character on input line 630.
 \lst@lineno=\count111
 \lst@maxwidth=\dimen140
 
-(C:\Users\User\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\lstmisc.sty
+(C:\Users\MARLE\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\lstmisc.sty
 File: lstmisc.sty 2013/08/26 1.5b (Carsten Heinz)
 \c@lstnumber=\count112
 \lst@skipnumbers=\count113
 \lst@framebox=\box27
 )
-(C:\Users\User\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\listings.cfg
+(C:\Users\MARLE\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\listings.cfg
 File: listings.cfg 2013/08/26 1.5b listings configuration
 ))
 Package: listings 2013/08/26 1.5b (Carsten Heinz)
 
-("C:\Users\User\Documents\GitHub\Documentación Python\Documentación.aux")
+("C:\Users\MARLE\Documents\GitHub\Parsing-Python\Documentación Python\Document
+ación.aux")
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 62.
 LaTeX Font Info:    ... okay on input line 62.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 62.
@@ -584,8 +587,8 @@ Underfull \hbox (badness 10000) in paragraph at lines 66--67
 
 [1
 
-{C:/Users/User/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <C:/Users/Use
-r/Documents/GitHub/Documentación Python/imagenes/Espol.png>]
+{C:/Users/MARLE/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <C:/Users/MA
+RLE/Documents/GitHub/Parsing-Python/Documentación Python/imagenes/Espol.png>]
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <30> not available
 (Font)              size <24.88> substituted on input line 81.
@@ -600,12 +603,14 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <8> on input line 81.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 81.
-[2] ("C:\Users\User\Documents\GitHub\Documentación Python\Documentación.toc"
+[2]
+("C:\Users\MARLE\Documents\GitHub\Parsing-Python\Documentación Python\Document
+ación.toc"
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <10.95> on input line 3.
 )
 \tf@toc=\write3
-[3]
+ [3]
 Underfull \hbox (badness 10000) in paragraph at lines 92--94
 
  []
@@ -676,26 +681,27 @@ Underfull \hbox (badness 10000) in paragraph at lines 114--115
  []
 
 [5] [6]
-("C:\Users\User\Documents\GitHub\Documentación Python\Documentación.aux")
+("C:\Users\MARLE\Documents\GitHub\Parsing-Python\Documentación Python\Document
+ación.aux")
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 5.12pt have occurred.
 
  ) 
 Here is how much of TeX's memory you used:
- 5784 strings out of 494045
- 83748 string characters out of 3148390
- 150873 words of memory out of 3000000
- 9018 multiletter control sequences out of 15000+200000
+ 5784 strings out of 493921
+ 83603 string characters out of 3147281
+ 151019 words of memory out of 3000000
+ 9019 multiletter control sequences out of 15000+200000
  10018 words of font info for 35 fonts, out of 3000000 for 9000
- 715 hyphenation exceptions out of 8191
+ 841 hyphenation exceptions out of 8191
  44i,10n,43p,338b,282s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Pr
 ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Fil
 es/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX
  2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files/MiKTeX 2.9/font
 s/type1/public/amsfonts/cm/cmss12.pfb>
-Output written on Documentación.pdf (6 pages, 125349 bytes).
+Output written on Documentación.pdf (6 pages, 125697 bytes).
 PDF statistics:
  44 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
